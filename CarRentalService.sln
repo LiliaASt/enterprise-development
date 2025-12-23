@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Domain", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Tests", "CarRentalService.Test\CarRentalService.Tests.csproj", "{4DA134E4-D013-4CA9-97BB-C5DC5B4B78E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.API", "CarRentalService.API\CarRentalService.API.csproj", "{0A980BB0-B73E-493A-8282-6923C537B038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.API.Tests", "CarRentalService.API.Tests\CarRentalService.API.Tests.csproj", "{5158576A-DC39-4643-8599-8A563973C221}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{4DA134E4-D013-4CA9-97BB-C5DC5B4B78E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DA134E4-D013-4CA9-97BB-C5DC5B4B78E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DA134E4-D013-4CA9-97BB-C5DC5B4B78E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A980BB0-B73E-493A-8282-6923C537B038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A980BB0-B73E-493A-8282-6923C537B038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A980BB0-B73E-493A-8282-6923C537B038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A980BB0-B73E-493A-8282-6923C537B038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5158576A-DC39-4643-8599-8A563973C221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5158576A-DC39-4643-8599-8A563973C221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5158576A-DC39-4643-8599-8A563973C221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5158576A-DC39-4643-8599-8A563973C221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
