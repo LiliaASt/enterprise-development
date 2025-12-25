@@ -1,7 +1,6 @@
-using CarRentalService.Domain.Data;
-using CarRentalService.Domain.Models;
+using CarRentalService.Domain.TestData;
 
-namespace CarRentalService.Test;
+namespace CarRentalService.Tests;
 
 /// <summary>
 /// Unit tests for the car rental service
@@ -39,7 +38,7 @@ public class CarRentalServiceTests(TestData service) : IClassFixture<TestData>
 
         // Assert
         Assert.Equal(expectedCount, result.Count);
-        for (int i = 0; i < expectedCount; i++)
+        for (var i = 0; i < expectedCount; i++)
         {
             Assert.Equal(expectedCustomers[i], result[i].FullName);
         }

@@ -1,5 +1,7 @@
-using CarRentalService.API.DTOs.Requests;
-using CarRentalService.API.DTOs.Responses;
+using CarRentalService.Application.Contracts.Cars;
+using CarRentalService.Application.Contracts.Clients;
+using CarRentalService.Application.Contracts.Rents;
+using CarRentalService.Application.Contracts.Shared;
 using CarRentalService.Domain.Models;
 using Mapster;
 
@@ -10,9 +12,13 @@ namespace CarRentalService.API.Mappings;
 /// </summary>
 public class MappingConfig : IRegister
 {
+    /// <summary>
+    /// Configures mapping rules between domain models and DTOs
+    /// </summary>
+    /// <param name="config">TypeAdapterConfig instance to configure mappings</param>
     public void Register(TypeAdapterConfig config)
     {
-        // Car mappings
+        // Car -> CarDto mapping configuration
         config.NewConfig<Car, CarDto>()
             .Map(dest => dest.CarModelGeneration, src => new CarModelGenerationDto
             {
@@ -22,17 +28,10 @@ public class MappingConfig : IRegister
                 RentalCostPerHour = src.CarModelGeneration.RentalCostPerHour
             });
 
-        config.NewConfig<CarCreateUpdateDto, Car>()
-            .Ignore(dest => dest.Id)
-            .Ignore(dest => dest.CarModelGeneration);
-
-        // Customer/Client mappings
+        // Customer -> ClientDto mapping configuration
         config.NewConfig<Customer, ClientDto>();
 
-        config.NewConfig<ClientCreateUpdateDto, Customer>()
-            .Ignore(dest => dest.Id);
-
-        // Rent mappings
+        // Rent -> RentDto mapping configuration
         config.NewConfig<Rent, RentDto>()
             .Map(dest => dest.Car, src => new CarSimpleDto
             {
@@ -46,10 +45,5 @@ public class MappingConfig : IRegister
                 Id = src.Customer.Id,
                 FullName = src.Customer.FullName
             });
-
-        config.NewConfig<RentCreateUpdateDto, Rent>()
-            .Ignore(dest => dest.Id)
-            .Ignore(dest => dest.Car)
-            .Ignore(dest => dest.Customer);
     }
 }

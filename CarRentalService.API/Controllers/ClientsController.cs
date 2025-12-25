@@ -1,6 +1,4 @@
-using CarRentalService.API.DTOs.Requests;
-using CarRentalService.API.DTOs.Responses;
-using CarRentalService.API.Interfaces;
+using CarRentalService.Application.Contracts.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalService.API.Controllers;
@@ -8,17 +6,13 @@ namespace CarRentalService.API.Controllers;
 /// <summary>
 /// API controller for managing clients
 /// </summary>
+/// <param name="service">Client service dependency</param>
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class ClientsController : ControllerBase
+public class ClientsController(IClientService service) : ControllerBase
 {
-    private readonly IApplicationService<ClientDto, ClientCreateUpdateDto> _service;
-
-    public ClientsController(IApplicationService<ClientDto, ClientCreateUpdateDto> service)
-    {
-        _service = service;
-    }
+    private readonly IClientService _service = service;
 
     /// <summary>
     /// Get all clients
@@ -33,6 +27,7 @@ public class ClientsController : ControllerBase
     /// <summary>
     /// Get client by ID
     /// </summary>
+    /// <param name="id">Client identifier</param>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ClientDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -49,6 +44,7 @@ public class ClientsController : ControllerBase
     /// <summary>
     /// Create new client
     /// </summary>
+    /// <param name="dto">Client creation data</param>
     [HttpPost]
     [ProducesResponseType(typeof(ClientDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -65,6 +61,8 @@ public class ClientsController : ControllerBase
     /// <summary>
     /// Update existing client
     /// </summary>
+    /// <param name="id">Client identifier</param>
+    /// <param name="dto">Client update data</param>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -81,6 +79,7 @@ public class ClientsController : ControllerBase
     /// <summary>
     /// Delete client
     /// </summary>
+    /// <param name="id">Client identifier</param>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -17,6 +17,10 @@ public class Car
     /// </summary>
     public required string Color { get; set; }
     /// <summary>
+    /// Car model generation identifier
+    /// </summary>
+    public int CarModelGenerationId { get; set; }
+    /// <summary>
     /// Car model generation
     /// </summary>
     public required CarModelGeneration CarModelGeneration { get; set; }

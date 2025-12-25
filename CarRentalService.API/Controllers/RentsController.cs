@@ -1,6 +1,4 @@
-using CarRentalService.API.DTOs.Requests;
-using CarRentalService.API.DTOs.Responses;
-using CarRentalService.API.Interfaces;
+using CarRentalService.Application.Contracts.Rents;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalService.API.Controllers;
@@ -8,17 +6,13 @@ namespace CarRentalService.API.Controllers;
 /// <summary>
 /// API controller for managing rents
 /// </summary>
+/// <param name="service">Rent service dependency</param>
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class RentsController : ControllerBase
+public class RentsController(IRentService service) : ControllerBase
 {
-    private readonly IApplicationService<RentDto, RentCreateUpdateDto> _service;
-
-    public RentsController(IApplicationService<RentDto, RentCreateUpdateDto> service)
-    {
-        _service = service;
-    }
+    private readonly IRentService _service = service;
 
     /// <summary>
     /// Get all rents
@@ -33,6 +27,7 @@ public class RentsController : ControllerBase
     /// <summary>
     /// Get rent by ID
     /// </summary>
+    /// <param name="id">Rent identifier</param>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(RentDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -49,6 +44,7 @@ public class RentsController : ControllerBase
     /// <summary>
     /// Create new rent
     /// </summary>
+    /// <param name="dto">Rent creation data</param>
     [HttpPost]
     [ProducesResponseType(typeof(RentDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -65,6 +61,8 @@ public class RentsController : ControllerBase
     /// <summary>
     /// Update existing rent
     /// </summary>
+    /// <param name="id">Rent identifier</param>
+    /// <param name="dto">Rent update data</param>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -81,6 +79,7 @@ public class RentsController : ControllerBase
     /// <summary>
     /// Delete rent
     /// </summary>
+    /// <param name="id">Rent identifier</param>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status200OK)]

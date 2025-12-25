@@ -1,24 +1,19 @@
-using CarRentalService.API.DTOs.Responses;
-using CarRentalService.API.Interfaces;
+using CarRentalService.Application.Contracts;
+using CarRentalService.Application.Contracts.Analytics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalService.API.Controllers;
 
 /// <summary>
 /// Analytics controller - provides business intelligence endpoints
-/// Based on unit tests from first lab work
 /// </summary>
+/// <param name="analyticsService">Analytics service dependency</param>
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class AnalyticsController : ControllerBase
+public class AnalyticsController(IAnalyticsService analyticsService) : ControllerBase
 {
-    private readonly IAnalyticsService _analyticsService;
-
-    public AnalyticsController(IAnalyticsService analyticsService)
-    {
-        _analyticsService = analyticsService;
-    }
+    private readonly IAnalyticsService _analyticsService = analyticsService;
 
     /// <summary>
     /// Get customers who rented cars of specific model name

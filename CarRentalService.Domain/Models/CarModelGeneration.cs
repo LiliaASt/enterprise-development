@@ -9,6 +9,10 @@ public class CarModelGeneration
     /// </summary>
     public int Id { get; set; }
     /// <summary>
+    /// Car model identifier
+    /// </summary>
+    public int CarModelId { get; set; }
+    /// <summary>
     /// Car model
     /// </summary>
     public required CarModel CarModel { get; set; }

@@ -9,6 +9,14 @@ public class Rent
     /// </summary>
     public int Id { get; set; }
     /// <summary>
+    /// Rented car identifier
+    /// </summary>
+    public int CarId { get; set; }
+    /// <summary>
+    /// Customer identifier
+    /// </summary>
+    public int CustomerId { get; set; }
+    /// <summary>
     /// Rented car
     /// </summary>
     public required Car Car { get; set; }

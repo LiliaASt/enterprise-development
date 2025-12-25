@@ -1,22 +1,20 @@
-using CarRentalService.API.DTOs.Responses;
-using CarRentalService.API.Interfaces;
-using CarRentalService.Domain.Data;
+using CarRentalService.Application.Contracts;
+using CarRentalService.Application.Contracts.Analytics;
+using CarRentalService.Domain.TestData;
 
-namespace CarRentalService.API.Services;
+namespace CarRentalService.Application.Services;
 
 /// <summary>
-/// Analytics service implementation based on unit tests from first lab
+/// Analytics service implementation 
 /// </summary>
-public class AnalyticsService : IAnalyticsService
+/// <param name="testData">Test data provider</param>
+public class AnalyticsService(TestData testData) : IAnalyticsService
 {
-    private readonly TestData _testData;
+    private readonly TestData _testData = testData;
 
-    public AnalyticsService(TestData testData)
-    {
-        _testData = testData;
-    }
-
-    // Реализация теста: GetCustomersByCarModel_ShouldReturnCustomersOrderedByFullName
+    /// <summary>
+    /// Get customers who rented cars of specific model name
+    /// </summary>
     public List<string> ReadCustomersByModelName(string modelName)
     {
         return _testData.Rents
@@ -27,6 +25,9 @@ public class AnalyticsService : IAnalyticsService
             .ToList();
     }
 
+    /// <summary>
+    /// Get customers who rented cars of specific model ID
+    /// </summary>
     public List<string> ReadCustomersByModelId(int modelId)
     {
         return _testData.Rents
@@ -37,7 +38,9 @@ public class AnalyticsService : IAnalyticsService
             .ToList();
     }
 
-    // Реализация теста: GetCarsCurrentlyRented_ShouldReturnActiveRentals
+    /// <summary>
+    /// Get currently rented cars at specific time
+    /// </summary>
     public List<CarRentalResponse> ReadCarsInRent(DateTime atTime)
     {
         return _testData.Rents
@@ -61,7 +64,9 @@ public class AnalyticsService : IAnalyticsService
             .ToList();
     }
 
-    // Реализация теста: GetTop5MostFrequentlyRentedCars_ShouldReturnExpectedCars
+    /// <summary>
+    /// Get top N most rented cars
+    /// </summary>
     public List<TopCarResponse> ReadTopMostRentedCars(int count = 5)
     {
         return _testData.Rents
@@ -81,7 +86,9 @@ public class AnalyticsService : IAnalyticsService
             .ToList();
     }
 
-    // Реализация теста: GetRentalCountPerCar_ShouldReturnCountForEachCar
+    /// <summary>
+    /// Get rental count for all cars
+    /// </summary>
     public List<CarRentalCountResponse> ReadAllCarsWithRentalCount()
     {
         var allCars = _testData.Cars.ToList();
@@ -101,7 +108,9 @@ public class AnalyticsService : IAnalyticsService
         .ToList();
     }
 
-    // Реализация теста: GetTop5CustomersByRentalSum_ShouldReturnCorrectOrder
+    /// <summary>
+    /// Get top N customers by total rental revenue
+    /// </summary>
     public List<TopCustomerResponse> ReadTopCustomersByTotalAmount(int count = 5)
     {
         return _testData.Rents
@@ -117,11 +126,5 @@ public class AnalyticsService : IAnalyticsService
             .ThenBy(x => x.FullName)
             .Take(count)
             .ToList();
-    }
-
-    // Дополнительный метод из теста: GetCustomersByCarModelName_ShouldReturnCorrectCustomers
-    public List<string> ReadCustomersByCarModelName(string modelName)
-    {
-        return ReadCustomersByModelName(modelName);
     }
 }

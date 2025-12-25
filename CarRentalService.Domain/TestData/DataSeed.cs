@@ -1,6 +1,6 @@
 using CarRentalService.Domain.Models;
 
-namespace CarRentalService.Domain.Data;
+namespace CarRentalService.Domain.TestData;
 /// <summary>
 /// Test data generator for car rental service
 /// </summary>
