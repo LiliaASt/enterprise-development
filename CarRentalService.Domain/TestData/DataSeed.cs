@@ -175,6 +175,7 @@ public class TestData
             new()
             {
                 Id = 1,
+                CarModelId = 1,
                 CarModel = CarModels[0],
                 ProductionYear = 2020,
                 EngineVolume = 2.5,
@@ -184,6 +185,7 @@ public class TestData
             new()
             {
                 Id = 2,
+                CarModelId = 1,
                 CarModel = CarModels[0],
                 ProductionYear = 2022,
                 EngineVolume = 2.5,
@@ -193,6 +195,7 @@ public class TestData
             new()
             {
                 Id = 3,
+                CarModelId = 2,
                 CarModel = CarModels[1],
                 ProductionYear = 2021,
                 EngineVolume = 3.0,
@@ -202,6 +205,7 @@ public class TestData
             new()
             {
                 Id = 4,
+                CarModelId = 2,
                 CarModel = CarModels[1],
                 ProductionYear = 2023,
                 EngineVolume = 3.0,
@@ -211,6 +215,7 @@ public class TestData
             new()
             {
                 Id = 5,
+                CarModelId = 3,
                 CarModel = CarModels[2],
                 ProductionYear = 2020,
                 EngineVolume = 1.4,
@@ -220,6 +225,7 @@ public class TestData
             new()
             {
                 Id = 6,
+                CarModelId = 3,
                 CarModel = CarModels[2],
                 ProductionYear = 2022,
                 EngineVolume = 1.4,
@@ -229,6 +235,7 @@ public class TestData
             new()
             {
                 Id = 7,
+                CarModelId = 4,
                 CarModel = CarModels[3],
                 ProductionYear = 2021,
                 EngineVolume = 2.0,
@@ -238,6 +245,7 @@ public class TestData
             new()
             {
                 Id = 8,
+                CarModelId = 5,
                 CarModel = CarModels[4],
                 ProductionYear = 2022,
                 EngineVolume = 2.0,
@@ -247,6 +255,7 @@ public class TestData
             new()
             {
                 Id = 9,
+                CarModelId = 6,
                 CarModel = CarModels[5],
                 ProductionYear = 2021,
                 EngineVolume = 1.6,
@@ -256,6 +265,7 @@ public class TestData
             new()
             {
                 Id = 10,
+                CarModelId = 7,
                 CarModel = CarModels[6],
                 ProductionYear = 2022,
                 EngineVolume = 2.0,
@@ -265,6 +275,7 @@ public class TestData
             new()
             {
                 Id = 11,
+                CarModelId = 8,
                 CarModel = CarModels[7],
                 ProductionYear = 2020,
                 EngineVolume = 1.6,
@@ -274,6 +285,7 @@ public class TestData
             new()
             {
                 Id = 12,
+                CarModelId = 9,
                 CarModel = CarModels[8],
                 ProductionYear = 2021,
                 EngineVolume = 1.8,
@@ -283,6 +295,7 @@ public class TestData
             new()
             {
                 Id = 13,
+                CarModelId = 10,
                 CarModel = CarModels[9],
                 ProductionYear = 2023,
                 EngineVolume = 3.5,
@@ -292,6 +305,7 @@ public class TestData
             new()
             {
                 Id = 14,
+                CarModelId = 11,
                 CarModel = CarModels[10],
                 ProductionYear = 2022,
                 EngineVolume = 2.0,
@@ -301,6 +315,7 @@ public class TestData
             new()
             {
                 Id = 15,
+                CarModelId = 12,
                 CarModel = CarModels[11],
                 ProductionYear = 2020,
                 EngineVolume = 1.6,
@@ -316,6 +331,7 @@ public class TestData
                 Id = 1,
                 LicensePlate = "A123BC777",
                 Color = "Black",
+                CarModelGenerationId = 1,
                 CarModelGeneration = CarModelGenerations[0]
             },
             new()
@@ -323,6 +339,7 @@ public class TestData
                 Id = 2,
                 LicensePlate = "B234CD777",
                 Color = "White",
+                CarModelGenerationId = 1,
                 CarModelGeneration = CarModelGenerations[0]
             },
             new()
@@ -330,6 +347,7 @@ public class TestData
                 Id = 3,
                 LicensePlate = "C345DE777",
                 Color = "Silver",
+                CarModelGenerationId = 3,
                 CarModelGeneration = CarModelGenerations[2]
             },
             new()
@@ -337,6 +355,7 @@ public class TestData
                 Id = 4,
                 LicensePlate = "D456EF777",
                 Color = "Blue",
+                CarModelGenerationId = 3,
                 CarModelGeneration = CarModelGenerations[2]
             },
             new()
@@ -344,6 +363,7 @@ public class TestData
                 Id = 5,
                 LicensePlate = "E567FG777",
                 Color = "Red",
+                CarModelGenerationId = 5,
                 CarModelGeneration = CarModelGenerations[4]
             },
             new()
@@ -351,6 +371,7 @@ public class TestData
                 Id = 6,
                 LicensePlate = "F678GH777",
                 Color = "Gray",
+                CarModelGenerationId = 5,
                 CarModelGeneration = CarModelGenerations[4]
             },
             new()
@@ -358,6 +379,7 @@ public class TestData
                 Id = 7,
                 LicensePlate = "G789HI777",
                 Color = "Black",
+                CarModelGenerationId = 7,
                 CarModelGeneration = CarModelGenerations[6]
             },
             new()
@@ -365,6 +387,7 @@ public class TestData
                 Id = 8,
                 LicensePlate = "H890IJ777",
                 Color = "White",
+                CarModelGenerationId = 7,
                 CarModelGeneration = CarModelGenerations[6]
             },
             new()
@@ -372,6 +395,7 @@ public class TestData
                 Id = 9,
                 LicensePlate = "I901JK777",
                 Color = "Blue",
+                CarModelGenerationId = 9,
                 CarModelGeneration = CarModelGenerations[8]
             },
             new()
@@ -379,6 +403,7 @@ public class TestData
                 Id = 10,
                 LicensePlate = "J012KL777",
                 Color = "Silver",
+                CarModelGenerationId = 9,
                 CarModelGeneration = CarModelGenerations[8]
             },
             new()
@@ -386,6 +411,7 @@ public class TestData
                 Id = 11,
                 LicensePlate = "K123LM777",
                 Color = "Red",
+                CarModelGenerationId = 11,
                 CarModelGeneration = CarModelGenerations[10]
             },
             new()
@@ -393,6 +419,7 @@ public class TestData
                 Id = 12,
                 LicensePlate = "L234MN777",
                 Color = "Black",
+                CarModelGenerationId = 11,
                 CarModelGeneration = CarModelGenerations[10]
             },
             new()
@@ -400,6 +427,7 @@ public class TestData
                 Id = 13,
                 LicensePlate = "M345NO777",
                 Color = "White",
+                CarModelGenerationId = 13,
                 CarModelGeneration = CarModelGenerations[12]
             },
             new()
@@ -407,6 +435,7 @@ public class TestData
                 Id = 14,
                 LicensePlate = "N456OP777",
                 Color = "Gray",
+                CarModelGenerationId = 13,
                 CarModelGeneration = CarModelGenerations[12]
             },
             new()
@@ -414,6 +443,7 @@ public class TestData
                 Id = 15,
                 LicensePlate = "O567PQ777",
                 Color = "Blue",
+                CarModelGenerationId = 15,
                 CarModelGeneration = CarModelGenerations[14]
             }
         ];
@@ -532,7 +562,9 @@ public class TestData
             new()
             {
                 Id = 1,
+                CarId = 1,
                 Car = Cars[0],
+                CustomerId = 1,
                 Customer = Customers[0],
                 StartTime = new DateTime(2024, 3, 1, 10, 0, 0),
                 Duration = 48
@@ -540,7 +572,9 @@ public class TestData
             new()
             {
                 Id = 2,
+                CarId = 1,
                 Car = Cars[0],
+                CustomerId = 3,
                 Customer = Customers[2],
                 StartTime = new DateTime(2024, 2, 25, 14, 30, 0),
                 Duration = 72
@@ -548,7 +582,9 @@ public class TestData
             new()
             {
                 Id = 3,
+                CarId = 1,
                 Car = Cars[0],
+                CustomerId = 5,
                 Customer = Customers[4],
                 StartTime = new DateTime(2024, 2, 20, 9, 15, 0),
                 Duration = 24
@@ -556,7 +592,9 @@ public class TestData
             new()
             {
                 Id = 4,
+                CarId = 2,
                 Car = Cars[1],
+                CustomerId = 2,
                 Customer = Customers[1],
                 StartTime = new DateTime(2024, 2, 27, 11, 45, 0),
                 Duration = 96
@@ -564,7 +602,9 @@ public class TestData
             new()
             {
                 Id = 5,
+                CarId = 2,
                 Car = Cars[1],
+                CustomerId = 4,
                 Customer = Customers[3],
                 StartTime = new DateTime(2024, 2, 25, 16, 0, 0),
                 Duration = 120
@@ -572,7 +612,9 @@ public class TestData
             new()
             {
                 Id = 6,
+                CarId = 3,
                 Car = Cars[2],
+                CustomerId = 6,
                 Customer = Customers[5],
                 StartTime = new DateTime(2024, 2, 23, 13, 20, 0),
                 Duration = 72
@@ -580,7 +622,9 @@ public class TestData
             new()
             {
                 Id = 7,
+                CarId = 3,
                 Car = Cars[2],
+                CustomerId = 8,
                 Customer = Customers[7],
                 StartTime = new DateTime(2024, 2, 18, 10, 10, 0),
                 Duration = 48
@@ -588,7 +632,9 @@ public class TestData
             new()
             {
                 Id = 8,
+                CarId = 4,
                 Car = Cars[3],
+                CustomerId = 7,
                 Customer = Customers[6],
                 StartTime = new DateTime(2024, 2, 28, 8, 30, 0),
                 Duration = 36
@@ -596,7 +642,9 @@ public class TestData
             new()
             {
                 Id = 9,
+                CarId = 5,
                 Car = Cars[4],
+                CustomerId = 9,
                 Customer = Customers[8],
                 StartTime = new DateTime(2024, 2, 15, 12, 0, 0),
                 Duration = 96
@@ -604,7 +652,9 @@ public class TestData
             new()
             {
                 Id = 10,
+                CarId = 6,
                 Car = Cars[5],
+                CustomerId = 10,
                 Customer = Customers[9],
                 StartTime = new DateTime(2024, 2, 28, 7, 0, 0),
                 Duration = 168
@@ -612,7 +662,9 @@ public class TestData
             new()
             {
                 Id = 11,
+                CarId = 7,
                 Car = Cars[6],
+                CustomerId = 11,
                 Customer = Customers[10],
                 StartTime = new DateTime(2024, 2, 22, 15, 45, 0),
                 Duration = 72
@@ -620,7 +672,9 @@ public class TestData
             new()
             {
                 Id = 12,
+                CarId = 8,
                 Car = Cars[7],
+                CustomerId = 12,
                 Customer = Customers[11],
                 StartTime = new DateTime(2024, 2, 26, 9, 20, 0),
                 Duration = 48
@@ -628,7 +682,9 @@ public class TestData
             new()
             {
                 Id = 13,
+                CarId = 9,
                 Car = Cars[8],
+                CustomerId = 13,
                 Customer = Customers[12],
                 StartTime = new DateTime(2024, 2, 29, 22, 0, 0),
                 Duration = 60
@@ -636,7 +692,9 @@ public class TestData
             new()
             {
                 Id = 14,
+                CarId = 10,
                 Car = Cars[9],
+                CustomerId = 14,
                 Customer = Customers[13],
                 StartTime = new DateTime(2024, 2, 24, 11, 30, 0),
                 Duration = 96
@@ -644,7 +702,9 @@ public class TestData
             new()
             {
                 Id = 15,
+                CarId = 11,
                 Car = Cars[10],
+                CustomerId = 15,
                 Customer = Customers[14],
                 StartTime = new DateTime(2024, 2, 10, 14, 15, 0),
                 Duration = 120
@@ -652,7 +712,9 @@ public class TestData
             new()
             {
                 Id = 16,
+                CarId = 12,
                 Car = Cars[11],
+                CustomerId = 1,
                 Customer = Customers[0],
                 StartTime = new DateTime(2024, 2, 29, 14, 0, 0),
                 Duration = 48
@@ -660,7 +722,9 @@ public class TestData
             new()
             {
                 Id = 17,
+                CarId = 13,
                 Car = Cars[12],
+                CustomerId = 2,
                 Customer = Customers[1],
                 StartTime = new DateTime(2024, 2, 5, 16, 45, 0),
                 Duration = 72
@@ -668,7 +732,9 @@ public class TestData
             new()
             {
                 Id = 18,
+                CarId = 14,
                 Car = Cars[13],
+                CustomerId = 3,
                 Customer = Customers[2],
                 StartTime = new DateTime(2024, 2, 12, 10, 10, 0),
                 Duration = 36
@@ -676,7 +742,9 @@ public class TestData
             new()
             {
                 Id = 19,
+                CarId = 15,
                 Car = Cars[14],
+                CustomerId = 4,
                 Customer = Customers[3],
                 StartTime = new DateTime(2024, 2, 16, 13, 30, 0),
                 Duration = 84
@@ -684,7 +752,9 @@ public class TestData
             new()
             {
                 Id = 20,
+                CarId = 2,
                 Car = Cars[1],
+                CustomerId = 6,
                 Customer = Customers[5],
                 StartTime = new DateTime(2024, 3, 2, 9, 0, 0),
                 Duration = 24
