@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Application.Contracts", "CarRentalService.Application.Contracts\CarRentalService.Application.Contracts.csproj", "{C3D4E5F6-0789-0123-CD45-EF6789012345}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.API.Tests", "CarRentalService.API.Tests\CarRentalService.API.Tests.csproj", "{D4E5F607-8901-2345-DE67-F89012345678}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Infrastructure.EfCore", "CarRentalService.Infrastructure.EfCore\CarRentalService.Infrastructure.EfCore.csproj", "{55D01C34-C464-463B-B6EC-9F75F4F17E77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.AppHost", "CarRentalService.AppHost\CarRentalService.AppHost.csproj", "{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +43,14 @@ Global
 		{C3D4E5F6-0789-0123-CD45-EF6789012345}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3D4E5F6-0789-0123-CD45-EF6789012345}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3D4E5F6-0789-0123-CD45-EF6789012345}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E5F607-8901-2345-DE67-F89012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E5F607-8901-2345-DE67-F89012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E5F607-8901-2345-DE67-F89012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4E5F607-8901-2345-DE67-F89012345678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55D01C34-C464-463B-B6EC-9F75F4F17E77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55D01C34-C464-463B-B6EC-9F75F4F17E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55D01C34-C464-463B-B6EC-9F75F4F17E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55D01C34-C464-463B-B6EC-9F75F4F17E77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
