@@ -4,17 +4,24 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10" />
+    <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
+    <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.1.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CarRentalService.Application\CarRentalService.Application.csproj" />
+    <ProjectReference Include="..\CarRentalService.Infrastructure.EfCore\CarRentalService.Infrastructure.EfCore.csproj" />
+    <ProjectReference Include="..\CarRentalService.ServiceDefaults\CarRentalService.ServiceDefaults.csproj" />
     <ProjectReference Include="..\CarRentalService.Application.Contracts\CarRentalService.Application.Contracts.csproj" />
     <ProjectReference Include="..\CarRentalService.Domain\CarRentalService.Domain.csproj" />
   </ItemGroup>

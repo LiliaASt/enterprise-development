@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarRentalService.API.Controllers;
 
 /// <summary>
-/// Analytics controller - provides business intelligence endpoints
+/// Controller for analytics and business intelligence endpoints
 /// </summary>
 /// <param name="analyticsService">Analytics service dependency</param>
 [ApiController]
@@ -16,74 +16,80 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     private readonly IAnalyticsService _analyticsService = analyticsService;
 
     /// <summary>
-    /// Get customers who rented cars of specific model name
+    /// Retrieves customers who rented cars of a specific model name
     /// </summary>
-    /// <param name="modelName">Car model name (e.g., "Toyota Camry")</param>
+    /// <param name="modelName">Car model name to filter by</param>
+    /// <returns>List of customer names</returns>
     [HttpGet("clients-by-model-name")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-    public ActionResult<List<string>> GetClientsByModelName([FromQuery] string modelName)
+    public async Task<ActionResult<List<string>>> GetClientsByModelName([FromQuery] string modelName)
     {
-        var result = _analyticsService.ReadCustomersByModelName(modelName);
+        var result = await _analyticsService.ReadCustomersByModelName(modelName);
         return Ok(result);
     }
 
     /// <summary>
-    /// Get customers who rented cars of specific model ID
+    /// Retrieves customers who rented cars of a specific model ID
     /// </summary>
-    /// <param name="modelId">Car model ID</param>
+    /// <param name="modelId">Car model ID to filter by</param>
+    /// <returns>List of customer names</returns>
     [HttpGet("clients-by-model-id/{modelId:int}")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-    public ActionResult<List<string>> GetClientsByModelId(int modelId)
+    public async Task<ActionResult<List<string>>> GetClientsByModelId(int modelId)
     {
-        var result = _analyticsService.ReadCustomersByModelId(modelId);
+        var result = await _analyticsService.ReadCustomersByModelId(modelId);
         return Ok(result);
     }
 
     /// <summary>
-    /// Get currently rented cars at specific time
+    /// Retrieves cars currently in rent at a specific time
     /// </summary>
-    /// <param name="atTime">Check time (default: current time)</param>
+    /// <param name="atTime">Time to check for active rentals (default: current time)</param>
+    /// <returns>List of currently rented cars</returns>
     [HttpGet("cars-in-rent")]
     [ProducesResponseType(typeof(List<CarRentalResponse>), StatusCodes.Status200OK)]
-    public ActionResult<List<CarRentalResponse>> GetCarsInRent([FromQuery] DateTime? atTime = null)
+    public async Task<ActionResult<List<CarRentalResponse>>> GetCarsInRent([FromQuery] DateTime? atTime = null)
     {
         var checkTime = atTime ?? DateTime.Now;
-        var result = _analyticsService.ReadCarsInRent(checkTime);
+        var result = await _analyticsService.ReadCarsInRent(checkTime);
         return Ok(result);
     }
 
     /// <summary>
-    /// Get top N most rented cars
+    /// Retrieves top N most frequently rented cars
     /// </summary>
     /// <param name="count">Number of top cars to return (default: 5)</param>
+    /// <returns>List of top rented cars with statistics</returns>
     [HttpGet("top-rented-cars")]
     [ProducesResponseType(typeof(List<TopCarResponse>), StatusCodes.Status200OK)]
-    public ActionResult<List<TopCarResponse>> GetTopRentedCars([FromQuery] int count = 5)
+    public async Task<ActionResult<List<TopCarResponse>>> GetTopRentedCars([FromQuery] int count = 5)
     {
-        var result = _analyticsService.ReadTopMostRentedCars(count);
+        var result = await _analyticsService.ReadTopMostRentedCars(count);
         return Ok(result);
     }
 
     /// <summary>
-    /// Get rental count for all cars
+    /// Retrieves rental count for all cars
     /// </summary>
+    /// <returns>List of all cars with their rental counts</returns>
     [HttpGet("all-cars-with-rental-count")]
     [ProducesResponseType(typeof(List<CarRentalCountResponse>), StatusCodes.Status200OK)]
-    public ActionResult<List<CarRentalCountResponse>> GetAllCarsWithRentalCount()
+    public async Task<ActionResult<List<CarRentalCountResponse>>> GetAllCarsWithRentalCount()
     {
-        var result = _analyticsService.ReadAllCarsWithRentalCount();
+        var result = await _analyticsService.ReadAllCarsWithRentalCount();
         return Ok(result);
     }
 
     /// <summary>
-    /// Get top N customers by total rental revenue
+    /// Retrieves top N customers by total rental revenue
     /// </summary>
     /// <param name="count">Number of top customers to return (default: 5)</param>
+    /// <returns>List of top customers by revenue</returns>
     [HttpGet("top-customers-by-revenue")]
     [ProducesResponseType(typeof(List<TopCustomerResponse>), StatusCodes.Status200OK)]
-    public ActionResult<List<TopCustomerResponse>> GetTopCustomersByRevenue([FromQuery] int count = 5)
+    public async Task<ActionResult<List<TopCustomerResponse>>> GetTopCustomersByRevenue([FromQuery] int count = 5)
     {
-        var result = _analyticsService.ReadTopCustomersByTotalAmount(count);
+        var result = await _analyticsService.ReadTopCustomersByTotalAmount(count);
         return Ok(result);
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarRentalService.API.Controllers;
 
 /// <summary>
-/// API controller for managing cars
+/// Controller for managing cars
 /// </summary>
 /// <param name="service">Car service dependency</param>
 [ApiController]
@@ -15,25 +15,28 @@ public class CarsController(ICarService service) : ControllerBase
     private readonly ICarService _service = service;
 
     /// <summary>
-    /// Get all cars
+    /// Retrieves all cars
     /// </summary>
+    /// <returns>List of all cars</returns>
     [HttpGet]
     [ProducesResponseType(typeof(List<CarDto>), StatusCodes.Status200OK)]
-    public ActionResult<List<CarDto>> GetAll()
+    public async Task<ActionResult<List<CarDto>>> GetAll()
     {
-        return Ok(_service.ReadAll());
+        var result = await _service.GetAll();
+        return Ok(result);
     }
 
     /// <summary>
-    /// Get car by ID
+    /// Retrieves a specific car by ID
     /// </summary>
     /// <param name="id">Car identifier</param>
+    /// <returns>Car details</returns>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CarDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public ActionResult<CarDto> GetById(int id)
+    public async Task<ActionResult<CarDto>> GetById(int id)
     {
-        var car = _service.Read(id);
+        var car = await _service.Get(id);
         if (car == null)
         {
             return NotFound($"Car with ID {id} not found.");
@@ -42,51 +45,64 @@ public class CarsController(ICarService service) : ControllerBase
     }
 
     /// <summary>
-    /// Create new car
+    /// Creates a new car
     /// </summary>
     /// <param name="dto">Car creation data</param>
+    /// <returns>Created car</returns>
     [HttpPost]
     [ProducesResponseType(typeof(CarDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public ActionResult<CarDto> Create([FromBody] CarCreateUpdateDto dto)
+    public async Task<ActionResult<CarDto>> Create([FromBody] CarCreateUpdateDto dto)
     {
-        var createdCar = _service.Create(dto);
-        if (createdCar == null)
+        try
         {
-            return BadRequest("Invalid car data or CarModelGenerationId not found.");
+            var createdCar = await _service.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = createdCar.Id }, createdCar);
         }
-        return CreatedAtAction(nameof(GetById), new { id = createdCar.Id }, createdCar);
+        catch (Exception ex)
+        {
+            return BadRequest($"Invalid car data: {ex.Message}");
+        }
     }
 
     /// <summary>
-    /// Update existing car
+    /// Updates an existing car
     /// </summary>
     /// <param name="id">Car identifier</param>
     /// <param name="dto">Car update data</param>
+    /// <returns>No content on success</returns>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public ActionResult Update(int id, [FromBody] CarCreateUpdateDto dto)
+    public async Task<ActionResult> Update(int id, [FromBody] CarCreateUpdateDto dto)
     {
-        var result = _service.Update(dto, id);
-        if (!result)
+        try
         {
-            return NotFound($"Car with ID {id} not found or invalid data.");
+            var result = await _service.Update(dto, id);
+            return NoContent();
         }
-        return NoContent();
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Car with ID {id} not found.");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
-    /// Delete car
+    /// Deletes a car
     /// </summary>
     /// <param name="id">Car identifier</param>
+    /// <returns>No content on success</returns>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult Delete(int id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Delete(int id)
     {
-        var result = _service.Delete(id);
-        return result ? NoContent() : Ok();
+        var result = await _service.Delete(id);
+        return result ? NoContent() : NotFound();
     }
 }
