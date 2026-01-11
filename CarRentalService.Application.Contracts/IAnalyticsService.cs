@@ -10,30 +10,30 @@ public interface IAnalyticsService
     /// <summary>
     /// Get customers who rented cars of specific model name
     /// </summary>
-    public List<string> ReadCustomersByModelName(string modelName);
+    public Task<List<string>> ReadCustomersByModelName(string modelName);
 
     /// <summary>
     /// Get customers who rented cars of specific model ID
     /// </summary>
-    public List<string> ReadCustomersByModelId(int modelId);
+    public Task<List<string>> ReadCustomersByModelId(int modelId);
 
     /// <summary>
     /// Get currently rented cars
     /// </summary>
-    public List<CarRentalResponse> ReadCarsInRent(DateTime atTime);
+    public Task<List<CarRentalResponse>> ReadCarsInRent(DateTime atTime);
 
     /// <summary>
     /// Get top N most rented cars
     /// </summary>
-    public List<TopCarResponse> ReadTopMostRentedCars(int count = 5);
+    public Task<List<TopCarResponse>> ReadTopMostRentedCars(int count = 5);
 
     /// <summary>
-    /// Get rental count for each car
+    /// Get rental count for all cars
     /// </summary>
-    public List<CarRentalCountResponse> ReadAllCarsWithRentalCount();
+    public Task<List<CarRentalCountResponse>> ReadAllCarsWithRentalCount();
 
     /// <summary>
-    /// Get top N customers by total rental amount
+    /// Get top N customers by total rental revenue
     /// </summary>
-    public List<TopCustomerResponse> ReadTopCustomersByTotalAmount(int count = 5);
+    public Task<List<TopCustomerResponse>> ReadTopCustomersByTotalAmount(int count = 5);
 }

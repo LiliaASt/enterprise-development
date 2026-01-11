@@ -1,4 +1,4 @@
-using CarRentalService.Application.Contracts.Shared;
+using CarRentalService.Application.Contracts.CarModelGeneration;
 
 namespace CarRentalService.Application.Contracts.Cars;
 

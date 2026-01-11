@@ -1,34 +1,37 @@
 namespace CarRentalService.Application.Contracts;
 
 /// <summary>
-/// Generic service interface for CRUD operations
+/// Generic service interface defining basic CRUD operations for entities
 /// </summary>
-/// <typeparam name="TDto">DTO for reading/returning data</typeparam>
-/// <typeparam name="TCreateUpdateDto">DTO for creating/updating data</typeparam>
-public interface IApplicationService<TDto, in TCreateUpdateDto>
+/// <typeparam name="TDto">DTO type for entity representation</typeparam>
+/// <typeparam name="TCreateUpdateDto">DTO type for create/update operations</typeparam>
+/// <typeparam name="TId">Type of the entity's primary key</typeparam>
+public interface IApplicationService<TDto, TCreateUpdateDto, TId>
+    where TDto : class
+    where TCreateUpdateDto : class
 {
     /// <summary>
-    /// Returns all entities
+    /// Creates a new entity
     /// </summary>
-    public List<TDto> ReadAll();
+    public Task<TDto> Create(TCreateUpdateDto dto);
 
     /// <summary>
-    /// Returns entity by ID
+    /// Retrieves a specific entity by its identifier
     /// </summary>
-    public TDto? Read(int id);
+    public Task<TDto?> Get(TId id);
 
     /// <summary>
-    /// Creates new entity
+    /// Retrieves all entities
     /// </summary>
-    public TDto? Create(TCreateUpdateDto dto);
+    public Task<IList<TDto>> GetAll();
 
     /// <summary>
-    /// Updates existing entity
+    /// Updates an existing entity
     /// </summary>
-    public bool Update(TCreateUpdateDto dto, int id);
+    public Task<TDto> Update(TCreateUpdateDto dto, TId id);
 
     /// <summary>
-    /// Deletes entity by ID
+    /// Deletes an entity by its identifier
     /// </summary>
-    public bool Delete(int id);
+    public Task<bool> Delete(TId id);
 }
