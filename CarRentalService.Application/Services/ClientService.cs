@@ -1,97 +1,80 @@
+using AutoMapper;
 using CarRentalService.Application.Contracts.Clients;
+using CarRentalService.Domain;
 using CarRentalService.Domain.Models;
-using CarRentalService.Domain.TestData;
 
 namespace CarRentalService.Application.Services;
 
 /// <summary>
-/// Client service implementation
+/// Service implementation for managing clients
 /// </summary>
-/// <param name="testData">Test data provider for in-memory storage</param>
-public class ClientService(TestData testData) : IClientService
+/// <param name="customerRepository">Customer repository</param>
+/// <param name="mapper">AutoMapper instance</param>
+public class ClientService(
+    IRepository<Customer, int> customerRepository,
+    IMapper mapper
+) : IClientService
 {
-    private readonly TestData _testData = testData;
-
     /// <summary>
-    /// Returns all clients
+    /// Creates a new client
     /// </summary>
-    public List<ClientDto> ReadAll()
+    /// <param name="dto">Client creation data</param>
+    /// <returns>Created client DTO</returns>
+    public async Task<ClientDto> Create(ClientCreateUpdateDto dto)
     {
-        return _testData.Customers.Select(c => new ClientDto
-        {
-            Id = c.Id,
-            DriverLicenseNumber = c.DriverLicenseNumber,
-            FullName = c.FullName,
-            DateOfBirth = c.DateOfBirth
-        }).ToList();
+        var allCustomers = await customerRepository.ReadAll();
+        var maxId = allCustomers.Any() ? allCustomers.Max(c => c.Id) : 0;
+
+        var customer = mapper.Map<Customer>(dto);
+        customer.Id = maxId + 1;
+
+        var created = await customerRepository.Create(customer);
+        return mapper.Map<ClientDto>(created);
     }
 
     /// <summary>
-    /// Returns client by ID
+    /// Deletes a client by its identifier
     /// </summary>
-    public ClientDto? Read(int id)
-    {
-        var client = _testData.Customers.FirstOrDefault(c => c.Id == id);
-        if (client == null) return null;
+    /// <param name="id">Client identifier</param>
+    /// <returns>True if deletion was successful, false otherwise</returns>
+    public async Task<bool> Delete(int id)
+        => await customerRepository.Delete(id);
 
-        return new ClientDto
-        {
-            Id = client.Id,
-            DriverLicenseNumber = client.DriverLicenseNumber,
-            FullName = client.FullName,
-            DateOfBirth = client.DateOfBirth
-        };
+    /// <summary>
+    /// Retrieves a client by its identifier
+    /// </summary>
+    /// <param name="id">Client identifier</param>
+    /// <returns>Client DTO if found, null otherwise</returns>
+    public async Task<ClientDto?> Get(int id)
+    {
+        var customer = await customerRepository.Read(id);
+        return customer != null ? mapper.Map<ClientDto>(customer) : null;
     }
 
     /// <summary>
-    /// Creates new client
+    /// Retrieves all clients
     /// </summary>
-    public ClientDto? Create(ClientCreateUpdateDto dto)
+    /// <returns>List of all client DTOs</returns>
+    public async Task<IList<ClientDto>> GetAll()
     {
-        var nextId = _testData.Customers.Any() ? _testData.Customers.Max(c => c.Id) + 1 : 1;
-
-        var client = new Customer
-        {
-            Id = nextId,
-            DriverLicenseNumber = dto.DriverLicenseNumber,
-            FullName = dto.FullName,
-            DateOfBirth = dto.DateOfBirth
-        };
-
-        _testData.Customers.Add(client);
-
-        return new ClientDto
-        {
-            Id = client.Id,
-            DriverLicenseNumber = client.DriverLicenseNumber,
-            FullName = client.FullName,
-            DateOfBirth = client.DateOfBirth
-        };
+        var customers = await customerRepository.ReadAll();
+        return mapper.Map<List<ClientDto>>(customers);
     }
 
     /// <summary>
-    /// Updates existing client
+    /// Updates an existing client
     /// </summary>
-    public bool Update(ClientCreateUpdateDto dto, int id)
+    /// <param name="dto">Client update data</param>
+    /// <param name="id">Client identifier</param>
+    /// <returns>Updated client DTO</returns>
+    public async Task<ClientDto> Update(ClientCreateUpdateDto dto, int id)
     {
-        var client = _testData.Customers.FirstOrDefault(c => c.Id == id);
-        if (client == null) return false;
+        var customer = await customerRepository.Read(id);
+        if (customer == null)
+            throw new KeyNotFoundException($"Client with id {id} not found");
 
-        client.DriverLicenseNumber = dto.DriverLicenseNumber;
-        client.FullName = dto.FullName;
-        client.DateOfBirth = dto.DateOfBirth;
-
-        return true;
-    }
-
-    /// <summary>
-    /// Deletes client by ID
-    /// </summary>
-    public bool Delete(int id)
-    {
-        var client = _testData.Customers.FirstOrDefault(c => c.Id == id);
-        if (client == null) return false;
-
-        return _testData.Customers.Remove(client);
+        mapper.Map(dto, customer);
+        var updated = await customerRepository.Update(customer);
+        return mapper.Map<ClientDto>(updated);
     }
 }

@@ -1,26 +1,64 @@
 using CarRentalService.Application.Contracts;
 using CarRentalService.Application.Contracts.Analytics;
-using CarRentalService.Domain.TestData;
+using CarRentalService.Domain;
+using CarRentalService.Domain.Models;
 
 namespace CarRentalService.Application.Services;
 
 /// <summary>
-/// Analytics service implementation 
+/// Analytics service implementation for car rental business intelligence
 /// </summary>
-/// <param name="testData">Test data provider</param>
-public class AnalyticsService(TestData testData) : IAnalyticsService
+/// <param name="rentRepository">Rent repository</param>
+/// <param name="carRepository">Car repository</param>
+/// <param name="customerRepository">Customer repository</param>
+/// <param name="carModelRepository">Car model repository</param>
+/// <param name="generationRepository">Car model generation repository</param>
+public class AnalyticsService(
+    IRepository<Rent, int> rentRepository,
+    IRepository<Car, int> carRepository,
+    IRepository<Customer, int> customerRepository,
+    IRepository<CarModel, int> carModelRepository,
+    IRepository<CarModelGeneration, int> generationRepository
+) : IAnalyticsService
 {
-    private readonly TestData _testData = testData;
-
     /// <summary>
     /// Get customers who rented cars of specific model name
     /// </summary>
-    public List<string> ReadCustomersByModelName(string modelName)
+    /// <param name="modelName">Car model name to filter by</param>
+    /// <returns>List of customer full names ordered alphabetically</returns>
+    public async Task<List<string>> ReadCustomersByModelName(string modelName)
     {
-        return _testData.Rents
-            .Where(r => r.Car.CarModelGeneration.CarModel.Name == modelName)
-            .Select(r => r.Customer.FullName)
+        var allRents = await rentRepository.ReadAll();
+        var allCustomers = await customerRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+        var allCarModels = await carModelRepository.ReadAll();
+
+        var targetModel = allCarModels.FirstOrDefault(m =>
+            m.Name.Equals(modelName, StringComparison.OrdinalIgnoreCase));
+
+        if (targetModel == null)
+            return new List<string>();
+
+        var modelGenerationIds = allGenerations
+            .Where(g => g.CarModelId == targetModel.Id)
+            .Select(g => g.Id)
+            .ToList();
+
+        var carIds = allCars
+            .Where(c => modelGenerationIds.Contains(c.CarModelGenerationId))
+            .Select(c => c.Id)
+            .ToList();
+
+        var customerIds = allRents
+            .Where(r => carIds.Contains(r.CarId))
+            .Select(r => r.CustomerId)
             .Distinct()
+            .ToList();
+
+        return allCustomers
+            .Where(c => customerIds.Contains(c.Id))
+            .Select(c => c.FullName)
             .OrderBy(name => name)
             .ToList();
     }
@@ -28,12 +66,34 @@ public class AnalyticsService(TestData testData) : IAnalyticsService
     /// <summary>
     /// Get customers who rented cars of specific model ID
     /// </summary>
-    public List<string> ReadCustomersByModelId(int modelId)
+    /// /// <param name="modelId">Car model ID to filter by</param>
+    /// <returns>List of customer full names ordered alphabetically</returns>
+    public async Task<List<string>> ReadCustomersByModelId(int modelId)
     {
-        return _testData.Rents
-            .Where(r => r.Car.CarModelGeneration.CarModel.Id == modelId)
-            .Select(r => r.Customer.FullName)
+        var allRents = await rentRepository.ReadAll();
+        var allCustomers = await customerRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+
+        var modelGenerationIds = allGenerations
+            .Where(g => g.CarModelId == modelId)
+            .Select(g => g.Id)
+            .ToList();
+
+        var carIds = allCars
+            .Where(c => modelGenerationIds.Contains(c.CarModelGenerationId))
+            .Select(c => c.Id)
+            .ToList();
+
+        var customerIds = allRents
+            .Where(r => carIds.Contains(r.CarId))
+            .Select(r => r.CustomerId)
             .Distinct()
+            .ToList();
+
+        return allCustomers
+            .Where(c => customerIds.Contains(c.Id))
+            .Select(c => c.FullName)
             .OrderBy(name => name)
             .ToList();
     }
@@ -41,24 +101,49 @@ public class AnalyticsService(TestData testData) : IAnalyticsService
     /// <summary>
     /// Get currently rented cars at specific time
     /// </summary>
-    public List<CarRentalResponse> ReadCarsInRent(DateTime atTime)
+    /// <param name="atTime">Time to check for active rentals</param>
+    /// <returns>List of currently rented cars with rental details</returns>
+    public async Task<List<CarRentalResponse>> ReadCarsInRent(DateTime atTime)
     {
-        return _testData.Rents
+        var allRents = await rentRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allCustomers = await customerRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+        var allCarModels = await carModelRepository.ReadAll();
+
+        var activeRentals = allRents
             .Where(r =>
             {
                 var rentalEnd = r.StartTime.AddHours(r.Duration);
                 return r.StartTime <= atTime && atTime <= rentalEnd;
             })
-            .Select(r => new CarRentalResponse
+            .ToList();
+
+        var result = new List<CarRentalResponse>();
+
+        foreach (var rental in activeRentals)
+        {
+            var car = allCars.FirstOrDefault(c => c.Id == rental.CarId);
+            var customer = allCustomers.FirstOrDefault(c => c.Id == rental.CustomerId);
+            var generation = allGenerations.FirstOrDefault(g => g.Id == car?.CarModelGenerationId);
+            var carModel = allCarModels.FirstOrDefault(m => m.Id == generation?.CarModelId);
+
+            if (car != null && customer != null && generation != null)
             {
-                CarId = r.Car.Id,
-                LicensePlate = r.Car.LicensePlate,
-                Color = r.Car.Color,
-                ModelName = r.Car.CarModelGeneration.CarModel.Name,
-                ClientName = r.Customer.FullName,
-                RentalStart = r.StartTime,
-                RentalEnd = r.StartTime.AddHours(r.Duration)
-            })
+                result.Add(new CarRentalResponse
+                {
+                    CarId = car.Id,
+                    LicensePlate = car.LicensePlate,
+                    Color = car.Color,
+                    ModelName = carModel?.Name ?? "Unknown",
+                    ClientName = customer.FullName,
+                    RentalStart = rental.StartTime,
+                    RentalEnd = rental.StartTime.AddHours(rental.Duration)
+                });
+            }
+        }
+
+        return result
             .DistinctBy(r => r.CarId)
             .OrderBy(r => r.RentalStart)
             .ToList();
@@ -67,19 +152,48 @@ public class AnalyticsService(TestData testData) : IAnalyticsService
     /// <summary>
     /// Get top N most rented cars
     /// </summary>
-    public List<TopCarResponse> ReadTopMostRentedCars(int count = 5)
+    /// <param name="count">Number of top cars to return (default: 5)</param>
+    /// <returns>List of top rented cars with rental statistics</returns>
+    public async Task<List<TopCarResponse>> ReadTopMostRentedCars(int count = 5)
     {
-        return _testData.Rents
-            .GroupBy(r => r.Car)
-            .Select(g => new TopCarResponse
+        var allRents = await rentRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+        var allCarModels = await carModelRepository.ReadAll();
+
+        var carGroups = allRents
+            .GroupBy(r => r.CarId)
+            .Select(g => new
             {
-                CarId = g.Key.Id,
-                LicensePlate = g.Key.LicensePlate,
-                ModelName = g.Key.CarModelGeneration.CarModel.Name,
+                CarId = g.Key,
                 RentalCount = g.Count(),
-                TotalHours = g.Sum(r => r.Duration),
-                TotalRevenue = (decimal)g.Sum(r => r.Duration * (double)g.Key.CarModelGeneration.RentalCostPerHour)
-            })
+                TotalHours = g.Sum(r => r.Duration)
+            });
+
+        var carRentalStats = new List<TopCarResponse>();
+
+        foreach (var group in carGroups)
+        {
+            var car = allCars.FirstOrDefault(c => c.Id == group.CarId);
+            if (car == null) continue;
+
+            var generation = allGenerations.FirstOrDefault(g => g.Id == car.CarModelGenerationId);
+            if (generation == null) continue;
+
+            var carModel = allCarModels.FirstOrDefault(m => m.Id == generation.CarModelId);
+
+            carRentalStats.Add(new TopCarResponse
+            {
+                CarId = car.Id,
+                LicensePlate = car.LicensePlate,
+                ModelName = carModel?.Name ?? "Unknown",
+                RentalCount = group.RentalCount,
+                TotalHours = group.TotalHours,
+                TotalRevenue = (decimal)(group.TotalHours * (double)generation.RentalCostPerHour)
+            });
+        }
+
+        return carRentalStats
             .OrderByDescending(x => x.RentalCount)
             .ThenBy(x => x.LicensePlate)
             .Take(count)
@@ -89,38 +203,79 @@ public class AnalyticsService(TestData testData) : IAnalyticsService
     /// <summary>
     /// Get rental count for all cars
     /// </summary>
-    public List<CarRentalCountResponse> ReadAllCarsWithRentalCount()
+    /// <returns>List of all cars with their rental counts</returns>
+    public async Task<List<CarRentalCountResponse>> ReadAllCarsWithRentalCount()
     {
-        var allCars = _testData.Cars.ToList();
-        var rentsByCar = _testData.Rents
-            .GroupBy(r => r.Car.Id)
+        var allRents = await rentRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+        var allCarModels = await carModelRepository.ReadAll();
+
+        var rentsByCar = allRents
+            .GroupBy(r => r.CarId)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        return allCars.Select(car => new CarRentalCountResponse
-        {
-            CarId = car.Id,
-            LicensePlate = car.LicensePlate,
-            ModelName = car.CarModelGeneration.CarModel.Name,
-            RentalCount = rentsByCar.GetValueOrDefault(car.Id, 0)
-        })
-        .OrderByDescending(x => x.RentalCount)
-        .ThenBy(x => x.CarId)
-        .ToList();
+        return allCars
+            .Select(car =>
+            {
+                var generation = allGenerations.FirstOrDefault(g => g.Id == car.CarModelGenerationId);
+                var carModel = generation != null
+                    ? allCarModels.FirstOrDefault(m => m.Id == generation.CarModelId)
+                    : null;
+
+                return new CarRentalCountResponse
+                {
+                    CarId = car.Id,
+                    LicensePlate = car.LicensePlate,
+                    ModelName = carModel?.Name ?? "Unknown",
+                    RentalCount = rentsByCar.GetValueOrDefault(car.Id, 0)
+                };
+            })
+            .OrderByDescending(x => x.RentalCount)
+            .ThenBy(x => x.CarId)
+            .ToList();
     }
 
     /// <summary>
     /// Get top N customers by total rental revenue
     /// </summary>
-    public List<TopCustomerResponse> ReadTopCustomersByTotalAmount(int count = 5)
+    /// <param name="count">Number of top customers to return (default: 5)</param>
+    /// <returns>List of top customers by total rental revenue</returns>
+    public async Task<List<TopCustomerResponse>> ReadTopCustomersByTotalAmount(int count = 5)
     {
-        return _testData.Rents
-            .GroupBy(r => r.Customer)
-            .Select(g => new TopCustomerResponse
+        var allRents = await rentRepository.ReadAll();
+        var allCustomers = await customerRepository.ReadAll();
+        var allCars = await carRepository.ReadAll();
+        var allGenerations = await generationRepository.ReadAll();
+
+        return allRents
+            .Select(r => new
             {
-                CustomerId = g.Key.Id,
-                FullName = g.Key.FullName,
-                RentalCount = g.Count(),
-                TotalRevenue = (decimal)g.Sum(r => r.Duration * (double)r.Car.CarModelGeneration.RentalCostPerHour)
+                Rental = r,
+                Car = allCars.FirstOrDefault(c => c.Id == r.CarId),
+                Customer = allCustomers.FirstOrDefault(c => c.Id == r.CustomerId)
+            })
+            .Where(x => x.Car != null && x.Customer != null)
+            .GroupBy(x => x.Customer!.Id)
+            .Select(g =>
+            {
+                var customer = g.First().Customer!;
+
+                var totalRevenue = g.Sum(x =>
+                {
+                    var generation = allGenerations.FirstOrDefault(gen => gen.Id == x.Car!.CarModelGenerationId);
+                    return generation != null
+                        ? (decimal)(x.Rental.Duration * (double)generation.RentalCostPerHour)
+                        : 0;
+                });
+
+                return new TopCustomerResponse
+                {
+                    CustomerId = customer.Id,
+                    FullName = customer.FullName,
+                    RentalCount = g.Count(),
+                    TotalRevenue = totalRevenue
+                };
             })
             .OrderByDescending(x => x.TotalRevenue)
             .ThenBy(x => x.FullName)
