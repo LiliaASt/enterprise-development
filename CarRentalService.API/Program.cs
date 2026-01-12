@@ -16,6 +16,8 @@ using CarRentalService.ServiceDefaults;
 using MongoDB.Driver;
 using System.Text.Json.Serialization;
 using System.Reflection;
+using CarRentalService.API.Services;
+using CarRentalService.Application.Contracts.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,23 @@ builder.Services.AddDbContext<CarRentalDbContext>((services, options) =>
 
     options.UseMongoDB(db.Client, db.DatabaseNamespace.DatabaseName);
 });
+
+// gRPC client
+builder.Services.AddGrpcClient<RentalIngestor.RentalIngestorClient>(o =>
+{
+    var address = builder.Configuration["RentalGenerator:GrpcAddress"]
+        ?? "https://localhost:7000";
+    o.Address = new Uri(address);
+})
+.ConfigureChannel(o =>
+{
+    o.MaxReceiveMessageSize = 32 * 1024 * 1024;
+    o.MaxSendMessageSize = 32 * 1024 * 1024;
+});
+
+builder.Services.AddAutoMapper(typeof(CarRentalGrpcProfile));
+builder.Services.AddMemoryCache();
+builder.Services.AddHostedService<CarRentalGrpcClient>();
 
 builder.Services.AddCors(options =>
 {
