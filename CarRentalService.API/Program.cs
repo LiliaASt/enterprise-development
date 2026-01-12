@@ -16,12 +16,17 @@ using CarRentalService.ServiceDefaults;
 using MongoDB.Driver;
 using System.Text.Json.Serialization;
 using System.Reflection;
-using CarRentalService.API.Services;
+using CarRentalService.Api.Services;
 using CarRentalService.Application.Contracts.Grpc;
+using CarRentalService.Api.Configuration;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.Configure<RentalGeneratorOptions>(
+    builder.Configuration.GetSection(RentalGeneratorOptions.SectionName));
 
 // AutoMapper
 builder.Services.AddAutoMapper(config => config.AddProfile<CarRentalProfile>());
@@ -54,10 +59,10 @@ builder.Services.AddDbContext<CarRentalDbContext>((services, options) =>
 });
 
 // gRPC client
-builder.Services.AddGrpcClient<RentalIngestor.RentalIngestorClient>(o =>
+builder.Services.AddGrpcClient<RentalIngestor.RentalIngestorClient>((serviceProvider, o) =>
 {
-    var address = builder.Configuration["RentalGenerator:GrpcAddress"]
-        ?? "https://localhost:7000";
+    var options = serviceProvider.GetRequiredService<IOptions<RentalGeneratorOptions>>().Value;
+    var address = options.GrpcAddress ?? "https://localhost:7000";
     o.Address = new Uri(address);
 })
 .ConfigureChannel(o =>
@@ -92,12 +97,20 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    var apiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var apiXmlPath = Path.Combine(AppContext.BaseDirectory, apiXmlFile);
 
-    if (File.Exists(xmlPath))
+    var contractsXmlFile = "CarRentalService.Application.Contracts.xml";
+    var contractsXmlPath = Path.Combine(AppContext.BaseDirectory, contractsXmlFile);
+
+    if (File.Exists(apiXmlPath))
     {
-        c.IncludeXmlComments(xmlPath);
+        c.IncludeXmlComments(apiXmlPath);
+    }
+
+    if (File.Exists(contractsXmlPath))
+    {
+        c.IncludeXmlComments(contractsXmlPath);
     }
 });
 
