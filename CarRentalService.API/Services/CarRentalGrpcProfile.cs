@@ -2,13 +2,16 @@ using AutoMapper;
 using CarRentalService.Application.Contracts.Grpc;
 using CarRentalService.Application.Contracts.Rents;
 
-namespace CarRentalService.API.Services;
+namespace CarRentalService.Api.Services;
 
 /// <summary>
 /// AutoMapper profile for mapping gRPC messages to DTOs
 /// </summary>
 public class CarRentalGrpcProfile : Profile
 {
+    /// <summary>
+    /// Initializes a new instance of the CarRentalGrpcProfile class
+    /// </summary>
     public CarRentalGrpcProfile()
     {
         CreateMap<RentalContractMessage, RentCreateUpdateDto>()

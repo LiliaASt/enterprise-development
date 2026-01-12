@@ -1,7 +1,7 @@
 using CarRentalService.Application.Contracts.Rents;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for managing rental transactions
@@ -12,8 +12,6 @@ namespace CarRentalService.API.Controllers;
 [Produces("application/json")]
 public class RentsController(IRentService service) : ControllerBase
 {
-    private readonly IRentService _service = service;
-
     /// <summary>
     /// Retrieves all rental transactions
     /// </summary>
@@ -22,7 +20,7 @@ public class RentsController(IRentService service) : ControllerBase
     [ProducesResponseType(typeof(List<RentDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<RentDto>>> GetAll()
     {
-        var result = await _service.GetAll();
+        var result = await service.GetAll();
         return Ok(result);
     }
 
@@ -36,7 +34,7 @@ public class RentsController(IRentService service) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RentDto>> GetById(int id)
     {
-        var rent = await _service.Get(id);
+        var rent = await service.Get(id);
         if (rent == null)
         {
             return NotFound($"Rent with ID {id} not found.");
@@ -56,7 +54,7 @@ public class RentsController(IRentService service) : ControllerBase
     {
         try
         {
-            var createdRent = await _service.Create(dto);
+            var createdRent = await service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = createdRent.Id }, createdRent);
         }
         catch (Exception ex)
@@ -78,7 +76,7 @@ public class RentsController(IRentService service) : ControllerBase
     {
         try
         {
-            var result = await _service.Update(dto, id);
+            var result = await service.Update(dto, id);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -101,7 +99,7 @@ public class RentsController(IRentService service) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(int id)
     {
-        var result = await _service.Delete(id);
+        var result = await service.Delete(id);
         return result ? NoContent() : NotFound();
     }
 
@@ -114,7 +112,7 @@ public class RentsController(IRentService service) : ControllerBase
     [ProducesResponseType(typeof(List<RentDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<RentDto>>> GetByClient(int clientId)
     {
-        var result = await _service.GetRentalsByClientAsync(clientId);
+        var result = await service.GetRentalsByClientAsync(clientId);
         return Ok(result);
     }
 
@@ -127,7 +125,7 @@ public class RentsController(IRentService service) : ControllerBase
     [ProducesResponseType(typeof(List<RentDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<RentDto>>> GetByCar(int carId)
     {
-        var result = await _service.GetRentalsByCarAsync(carId);
+        var result = await service.GetRentalsByCarAsync(carId);
         return Ok(result);
     }
 }

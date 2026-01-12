@@ -18,7 +18,7 @@ var generator = builder.AddProject<Projects.CarRentalService_Generator_Grpc_Host
     .WithEnvironment("Generator:WaitTime", waitTime);
 
 // Add main API
-builder.AddProject<Projects.CarRentalService_API>("carrental-api")
+builder.AddProject<Projects.CarRentalService_Api>("carrental-api")
     .WithReference(mongo)
     .WithReference(generator)
     .WithEnvironment("RentalGenerator:GrpcAddress", generator.GetEndpoint("https"))
