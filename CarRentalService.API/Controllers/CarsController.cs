@@ -1,7 +1,7 @@
 using CarRentalService.Application.Contracts.Cars;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for managing cars
@@ -12,8 +12,6 @@ namespace CarRentalService.API.Controllers;
 [Produces("application/json")]
 public class CarsController(ICarService service) : ControllerBase
 {
-    private readonly ICarService _service = service;
-
     /// <summary>
     /// Retrieves all cars
     /// </summary>
@@ -22,7 +20,7 @@ public class CarsController(ICarService service) : ControllerBase
     [ProducesResponseType(typeof(List<CarDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<CarDto>>> GetAll()
     {
-        var result = await _service.GetAll();
+        var result = await service.GetAll();
         return Ok(result);
     }
 
@@ -36,7 +34,7 @@ public class CarsController(ICarService service) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CarDto>> GetById(int id)
     {
-        var car = await _service.Get(id);
+        var car = await service.Get(id);
         if (car == null)
         {
             return NotFound($"Car with ID {id} not found.");
@@ -56,7 +54,7 @@ public class CarsController(ICarService service) : ControllerBase
     {
         try
         {
-            var createdCar = await _service.Create(dto);
+            var createdCar = await service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = createdCar.Id }, createdCar);
         }
         catch (Exception ex)
@@ -79,7 +77,7 @@ public class CarsController(ICarService service) : ControllerBase
     {
         try
         {
-            var result = await _service.Update(dto, id);
+            var result = await service.Update(dto, id);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -102,7 +100,7 @@ public class CarsController(ICarService service) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(int id)
     {
-        var result = await _service.Delete(id);
+        var result = await service.Delete(id);
         return result ? NoContent() : NotFound();
     }
 }

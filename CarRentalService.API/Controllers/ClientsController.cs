@@ -1,7 +1,7 @@
 using CarRentalService.Application.Contracts.Clients;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for managing clients
@@ -12,8 +12,6 @@ namespace CarRentalService.API.Controllers;
 [Produces("application/json")]
 public class ClientsController(IClientService service) : ControllerBase
 {
-    private readonly IClientService _service = service;
-
     /// <summary>
     /// Retrieves all clients
     /// </summary>
@@ -22,7 +20,7 @@ public class ClientsController(IClientService service) : ControllerBase
     [ProducesResponseType(typeof(List<ClientDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ClientDto>>> GetAll()
     {
-        var result = await _service.GetAll();
+        var result = await service.GetAll();
         return Ok(result);
     }
 
@@ -36,7 +34,7 @@ public class ClientsController(IClientService service) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ClientDto>> GetById(int id)
     {
-        var client = await _service.Get(id);
+        var client = await service.Get(id);
         if (client == null)
         {
             return NotFound($"Client with ID {id} not found.");
@@ -56,7 +54,7 @@ public class ClientsController(IClientService service) : ControllerBase
     {
         try
         {
-            var createdClient = await _service.Create(dto);
+            var createdClient = await service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = createdClient.Id }, createdClient);
         }
         catch (Exception ex)
@@ -78,7 +76,7 @@ public class ClientsController(IClientService service) : ControllerBase
     {
         try
         {
-            var result = await _service.Update(dto, id);
+            var result = await service.Update(dto, id);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -97,7 +95,7 @@ public class ClientsController(IClientService service) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(int id)
     {
-        var result = await _service.Delete(id);
+        var result = await service.Delete(id);
         return result ? NoContent() : NotFound();
     }
 }

@@ -2,7 +2,7 @@ using CarRentalService.Application.Contracts;
 using CarRentalService.Application.Contracts.Analytics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for analytics and business intelligence endpoints
@@ -13,8 +13,6 @@ namespace CarRentalService.API.Controllers;
 [Produces("application/json")]
 public class AnalyticsController(IAnalyticsService analyticsService) : ControllerBase
 {
-    private readonly IAnalyticsService _analyticsService = analyticsService;
-
     /// <summary>
     /// Retrieves customers who rented cars of a specific model name
     /// </summary>
@@ -24,7 +22,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<string>>> GetClientsByModelName([FromQuery] string modelName)
     {
-        var result = await _analyticsService.ReadCustomersByModelName(modelName);
+        var result = await analyticsService.ReadCustomersByModelName(modelName);
         return Ok(result);
     }
 
@@ -37,7 +35,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<string>>> GetClientsByModelId(int modelId)
     {
-        var result = await _analyticsService.ReadCustomersByModelId(modelId);
+        var result = await analyticsService.ReadCustomersByModelId(modelId);
         return Ok(result);
     }
 
@@ -51,7 +49,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     public async Task<ActionResult<List<CarRentalResponse>>> GetCarsInRent([FromQuery] DateTime? atTime = null)
     {
         var checkTime = atTime ?? DateTime.Now;
-        var result = await _analyticsService.ReadCarsInRent(checkTime);
+        var result = await analyticsService.ReadCarsInRent(checkTime);
         return Ok(result);
     }
 
@@ -64,7 +62,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [ProducesResponseType(typeof(List<TopCarResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<TopCarResponse>>> GetTopRentedCars([FromQuery] int count = 5)
     {
-        var result = await _analyticsService.ReadTopMostRentedCars(count);
+        var result = await analyticsService.ReadTopMostRentedCars(count);
         return Ok(result);
     }
 
@@ -76,7 +74,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [ProducesResponseType(typeof(List<CarRentalCountResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<CarRentalCountResponse>>> GetAllCarsWithRentalCount()
     {
-        var result = await _analyticsService.ReadAllCarsWithRentalCount();
+        var result = await analyticsService.ReadAllCarsWithRentalCount();
         return Ok(result);
     }
 
@@ -89,7 +87,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [ProducesResponseType(typeof(List<TopCustomerResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<TopCustomerResponse>>> GetTopCustomersByRevenue([FromQuery] int count = 5)
     {
-        var result = await _analyticsService.ReadTopCustomersByTotalAmount(count);
+        var result = await analyticsService.ReadTopCustomersByTotalAmount(count);
         return Ok(result);
     }
 }

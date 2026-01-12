@@ -1,7 +1,7 @@
 using CarRentalService.Application.Contracts.CarModelGeneration;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for managing car model generations
@@ -12,8 +12,6 @@ namespace CarRentalService.API.Controllers;
 [Produces("application/json")]
 public class CarModelGenerationsController(ICarModelGenerationService service) : ControllerBase
 {
-    private readonly ICarModelGenerationService _service = service;
-
     /// <summary>
     /// Retrieves all car model generations
     /// </summary>
@@ -22,7 +20,7 @@ public class CarModelGenerationsController(ICarModelGenerationService service) :
     [ProducesResponseType(typeof(List<CarModelGenerationDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<CarModelGenerationDto>>> GetAll()
     {
-        var result = await _service.GetAll();
+        var result = await service.GetAll();
         return Ok(result);
     }
 
@@ -36,7 +34,7 @@ public class CarModelGenerationsController(ICarModelGenerationService service) :
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CarModelGenerationDto>> GetById(int id)
     {
-        var generation = await _service.Get(id);
+        var generation = await service.Get(id);
         if (generation == null)
         {
             return NotFound($"CarModelGeneration with ID {id} not found.");
@@ -56,7 +54,7 @@ public class CarModelGenerationsController(ICarModelGenerationService service) :
     {
         try
         {
-            var createdGeneration = await _service.Create(dto);
+            var createdGeneration = await service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = createdGeneration.Id }, createdGeneration);
         }
         catch (Exception ex)
@@ -79,7 +77,7 @@ public class CarModelGenerationsController(ICarModelGenerationService service) :
     {
         try
         {
-            await _service.Update(dto, id);
+            await service.Update(dto, id);
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -102,7 +100,7 @@ public class CarModelGenerationsController(ICarModelGenerationService service) :
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(int id)
     {
-        var result = await _service.Delete(id);
+        var result = await service.Delete(id);
         return result ? NoContent() : NotFound();
     }
 }
