@@ -6,40 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Grpc.Core;
 
-namespace CarRentalService.API.Controllers;
+namespace CarRentalService.Api.Controllers;
 
 /// <summary>
 /// Controller for managing rental contract generation via gRPC
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class GeneratorController : ControllerBase
+public class GeneratorController(
+    RentalIngestor.RentalIngestorClient grpcClient,
+    IRentService rentService,
+    ICarService carService,
+    IClientService clientService,
+    IMapper mapper,
+    ILogger<GeneratorController> logger) : ControllerBase
 {
-    private readonly RentalIngestor.RentalIngestorClient _grpcClient;
-    private readonly IRentService _rentService;
-    private readonly ICarService _carService;
-    private readonly IClientService _clientService;
-    private readonly IMapper _mapper;
-    private readonly ILogger<GeneratorController> _logger;
-
-    /// <summary>
-    /// Initializes a new instance of GeneratorController
-    /// </summary>
-    public GeneratorController(
-        RentalIngestor.RentalIngestorClient grpcClient,
-        IRentService rentService,
-        ICarService carService,
-        IClientService clientService,
-        IMapper mapper,
-        ILogger<GeneratorController> logger)
-    {
-        _grpcClient = grpcClient;
-        _rentService = rentService;
-        _carService = carService;
-        _clientService = clientService;
-        _mapper = mapper;
-        _logger = logger;
-    }
 
     /// <summary>
     /// Gets current system status and statistics
@@ -50,9 +31,9 @@ public class GeneratorController : ControllerBase
     {
         try
         {
-            var cars = await _carService.GetAll();
-            var clients = await _clientService.GetAll();
-            var rents = await _rentService.GetAll();
+            var cars = await carService.GetAll();
+            var clients = await clientService.GetAll();
+            var rents = await rentService.GetAll();
 
             return Ok(new
             {
@@ -85,14 +66,14 @@ public class GeneratorController : ControllerBase
 
         try
         {
-            _logger.LogInformation("Starting manual generation of {Count} contracts (batchSize={BatchSize})",
+            logger.LogInformation("Starting manual generation of {Count} contracts (batchSize={BatchSize})",
                 count, batchSize);
 
             var requestId = Guid.NewGuid().ToString("N");
             var generated = 0;
             var saved = 0;
 
-            using var call = _grpcClient.StreamRentals();
+            using var call = grpcClient.StreamRentals();
 
             // Sending a request
             await call.RequestStream.WriteAsync(new RentalGenerationRequest
@@ -109,35 +90,35 @@ public class GeneratorController : ControllerBase
                 if (batch.RequestId != requestId)
                     continue;
 
-                _logger.LogInformation("Received batch: {BatchCount} contracts", batch.Rentals.Count);
+                logger.LogInformation("Received batch: {BatchCount} contracts", batch.Rentals.Count);
                 generated += batch.Rentals.Count;
 
                 foreach (var rental in batch.Rentals)
                 {
                     try
                     {
-                        var carExists = await _carService.Get(rental.CarId) != null;
-                        var clientExists = await _clientService.Get(rental.CustomerId) != null;
+                        var carExists = await carService.Get(rental.CarId) != null;
+                        var clientExists = await clientService.Get(rental.CustomerId) != null;
 
                         if (!carExists || !clientExists)
                         {
-                            _logger.LogWarning(
+                            logger.LogWarning(
                                 "Skipping the contract: CarId={CarId} (exists={CarExists}), ClientId={ClientId} (exists={ClientExists})",
                                 rental.CarId, carExists, rental.CustomerId, clientExists);
                             continue;
                         }
 
                         // Save
-                        var dto = _mapper.Map<RentCreateUpdateDto>(rental);
-                        await _rentService.Create(dto);
+                        var dto = mapper.Map<RentCreateUpdateDto>(rental);
+                        await rentService.Create(dto);
                         saved++;
 
-                        _logger.LogDebug("Saving the contract: CarId={CarId}, ClientId={ClientId}",
+                        logger.LogDebug("Saving the contract: CarId={CarId}, ClientId={ClientId}",
                             rental.CarId, rental.CustomerId);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Error saving the contract");
+                        logger.LogError(ex, "Error saving the contract");
                     }
                 }
 
@@ -157,7 +138,7 @@ public class GeneratorController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in generating test data");
+            logger.LogError(ex, "Error in generating test data");
             return StatusCode(500, new { Error = ex.Message });
         }
     }
