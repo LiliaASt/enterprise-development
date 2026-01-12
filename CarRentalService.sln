@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Domain", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Test", "CarRentalService.Test\CarRentalService.Tests.csproj", "{4DA134E4-D013-4CA9-97BB-C5DC5B4B78E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.API", "CarRentalService.API\CarRentalService.API.csproj", "{A1B2C3D4-E5F6-7890-AB12-CD34EF567890}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Api", "CarRentalService.Api\CarRentalService.Api.csproj", "{A1B2C3D4-E5F6-7890-AB12-CD34EF567890}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Application", "CarRentalService.Application\CarRentalService.Application.csproj", "{B2C3D4E5-F607-8901-BC23-DE45F6789012}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Infrastructure.EfCore", "CarRentalService.Infrastructure.EfCore\CarRentalService.Infrastructure.EfCore.csproj", "{55D01C34-C464-463B-B6EC-9F75F4F17E77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.AppHost", "CarRentalService.AppHost\CarRentalService.AppHost.csproj", "{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.ServiceDefaults", "CarRentalService.ServiceDefaults\CarRentalService.ServiceDefaults.csproj", "{8622A85F-E3B3-4028-B83B-2375982907FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalService.Generator.Grpc.Host", "CarRentalService.Generator.Grpc.Host\CarRentalService.Generator.Grpc.Host.csproj", "{0FEC7B89-9D58-410E-817A-D13D4F69923F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BAC1581-5EEE-45AB-BAAE-C62B8A8012D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8622A85F-E3B3-4028-B83B-2375982907FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8622A85F-E3B3-4028-B83B-2375982907FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8622A85F-E3B3-4028-B83B-2375982907FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8622A85F-E3B3-4028-B83B-2375982907FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEC7B89-9D58-410E-817A-D13D4F69923F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEC7B89-9D58-410E-817A-D13D4F69923F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEC7B89-9D58-410E-817A-D13D4F69923F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEC7B89-9D58-410E-817A-D13D4F69923F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
